@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-example
+spec:
+  type: LoadBalancer
+  selector:
+    app: example-nginx
+    type: demo-02
+  ports:
+    - targetPort: 80 # Port au niveau du conteneur
+      port: 80 # Port au niveau du cluster
+      # nodePort: 30001 # Port au niveau de la node (30.000 - 32.767)
