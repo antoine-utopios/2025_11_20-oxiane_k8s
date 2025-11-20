@@ -1,0 +1,62 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: deployment-nginx-example
+  namespace: banking-bnp
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: example-nginx
+      type: demo-04
+  template:
+    metadata:
+      name: pod-nginx-example
+      labels:
+        app: example-nginx
+        type: demo-04
+    spec:
+      # strategy: Recreate
+      containers:
+        - name: container-nginx-example
+          image: nginx:alpine
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "200Mi"
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            periodSeconds: 20
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            periodSeconds: 20
+
+      # On crée une tolérance au niveau des pods par rapport à la teinte sur la worker node américaine
+      tolerations:
+        - key: country
+          value: usa
+          operator: Equal
+          effect: NoExecute
+
+      # On crée une affinité au niveau des pods par rapport à la teinte sur la worker node américaine
+      affinity:
+        # preferredDuringSchedulingIgnoredDuringExecution:
+        # requiredDuringSchedulingRequiredDuringExecution: => En cours de dev
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: country
+                    operator: In
+                    values:
+                      - usa

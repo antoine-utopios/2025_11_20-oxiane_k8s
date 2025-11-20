@@ -1,0 +1,42 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: deployment-mysql-example
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: example-mysql
+      type: demo-03
+  template:
+    metadata:
+      name: pod-mysql-example
+      labels:
+        app: example-mysql
+        type: demo-03
+    spec:
+      # strategy: Recreate
+      containers:
+        - name: container-mysql-example
+          image: mysql
+          resources:
+            limits:
+              cpu: 1
+              memory: "500Mi"
+          ports:
+            - containerPort: 3306
+          # env:
+          #   - name: MYSQL_ROOT_PASSWORD
+          #     value: root
+          # envFrom:
+          #   - configMapRef:
+          #       name: configmap-example
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-example
+                  key: MYSQL_ROOT_PASS
+                # configMapKeyRef:
+                #   name: configmap-example
+                #   key: MYSQL_ROOT_PASS
