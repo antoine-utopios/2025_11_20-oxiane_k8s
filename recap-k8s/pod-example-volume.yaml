@@ -1,0 +1,29 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-example
+spec:
+  containers:
+    - name: container-example
+      image: nginx
+      volumeMounts:
+        - mountPath: /data/nginx
+          name: nginx-data
+      resources:
+        limits:
+          cpu: "1"
+          memory: "500Mi"
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+
+  volumes:
+    - name: nginx-data
+      # emptyDir: {} # /kubernetes/blablatruc:/data/nginx
+
+      # hostPath:
+      #   path: /my-k8s/data/nginx
+      #   type: DirectoryOrCreate
+
+      persistentVolumeClaim:
+        claimName: pvc-example

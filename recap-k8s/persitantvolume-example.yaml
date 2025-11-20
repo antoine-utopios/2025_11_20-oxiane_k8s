@@ -1,0 +1,25 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-example
+spec:
+  capacity:
+    storage: "1Gi"
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual
+  hostPath:
+    path: /data/pv-01
+    type: DirectoryOrCreate
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-example
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: "10Mi"

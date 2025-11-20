@@ -1,0 +1,26 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-example
+spec:
+  initContainers:
+    - name: db-checker
+      image: busybox
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+      command: ["sleep", "5s"]
+  containers:
+    - name: container-example
+      image: nginx
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "500Mi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
