@@ -1,0 +1,8 @@
+image:
+  name: nginx
+  tag: alpine
+
+service:
+  enabled: false
+
+containerPorts: [80, 443]
