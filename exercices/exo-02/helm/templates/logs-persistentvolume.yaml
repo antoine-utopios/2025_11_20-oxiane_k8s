@@ -1,0 +1,21 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ include "exo02.fullName" . }}-logs
+  namespace: {{ include "exo02.fullName" . }}
+spec:
+  capacity:
+    storage: {{ .capacity | default .Values.persistentVolume.defaultStorageCapcity }}
+  accessModes: {{ (.accessModes | default list "ReadWriteOnce" ) | toYaml | nindent 4 }}
+  {{ include "exo02.storageClassHandler" . }}
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "exo02.fullName" . }}-logs-pvc
+  namespace: {{ include "exo02.fullName" . }}
+spec: 
+  accessModes: {{ (.accessModes | default list "ReadWriteOnce" ) | toYaml | nindent 4 }}
+  resources:
+    requests: {{ .Values.persistentVolume.defaultStorageCapcity }}

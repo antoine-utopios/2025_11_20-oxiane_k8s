@@ -1,0 +1,12 @@
+{{ range $key, $svc := .Values.services | default dict -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "exo02.fullName" $ }}-dogs
+  namespace: {{ include "exo02.fullName" $ }}
+spec:
+  selector: {{ .selector | toYaml | nindent 4 }}
+  ports: {{ .ports | toYaml | nindent 4 }}
+  type: {{ .type }}
+{{ end -}}

@@ -1,0 +1,42 @@
+deployment:
+  defaultReplicaCount: 3
+
+persistentVolume:
+  defaultStorageCapcity: "1Gi"
+  defaultStorageClassName: "manual"
+  defaultHostPath:
+    path: "/mnt/data/pv"
+    type: "DirectoryOrCreate"
+
+deployments:
+  dogs:
+    imageName: gharrowbm/dogs-api:latest
+    containerPort: 4000
+    env:
+      - name: LOGS_API_URL
+        value: "http://logs-api-service:3000/api/v1/logs"
+    volumeMountPath: /usr/src/app/data
+    claimName: dogs-pvc
+  logs:
+    imageName: gharrowbm/logs-api:latest
+    containerPort: 8080
+    volumeMountPath: /usr/src/app/data
+    claimName: logs-pvc
+
+services:
+  dogs:
+    selector:
+      app: dogs-api
+    ports:
+      - protocol: TCP
+        port: 4000
+        targetPort: 4000
+    type: ClusterIP
+  logs:
+    selector:
+      app: logs-api
+    ports:
+      - protocol: TCP
+        port: 3000
+        targetPort: 3000
+    type: ClusterIP

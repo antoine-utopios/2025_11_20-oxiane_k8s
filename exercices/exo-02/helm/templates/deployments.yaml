@@ -1,0 +1,31 @@
+{{ range $key, $dep := .Values.deployments | default dict -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "exo02.fullName" $ }}-{{ $key }}
+  namespace: {{ include "exo02.fullName" $ }}
+spec:
+  replicas: {{ $.Values.deployment.defaultReplicaCount }}
+  selector:
+    matchLabels: {{ include "exo02.selectorLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "exo02.selectorLabels" $ | nindent 8 }}
+    spec:
+      containers:
+        - name: dogs-api
+          image: {{ .imageName }}
+          ports:
+            - containerPort: {{ .containerPort }}
+          {{ if hasKey . "env" -}}
+          env: {{ .env | toYaml | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: dogs-storage
+              mountPath: {{ .volumeMountPath }}
+      volumes:
+        - name: dogs-storage
+          persistentVolumeClaim:
+            claimName: {{ .claimName }}
+{{ end -}}
