@@ -1,3 +1,5 @@
+{{- include "demo-nginx.validateTestValidation" . -}}
+{{- include "demo-nginx.validateTestValidationCorrectValue" . -}}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -15,13 +17,19 @@ spec:
       containers:
         - name: {{ .Release.Name }}-{{ .Chart.Name }}-container
           image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+          {{ if hasKey .Values.infos.deployment "resources" -}}
           resources:
             limits:
-              cpu: "500m"
-              memory: "200Mi"
+              {{ with .Values.infos.deployment.resources.limits -}}
+              cpu: {{ .cpu }}
+              memory: {{ .memory}}
+              {{- end }}
             requests:
-              cpu: "500m"
-              memory: "200Mi"
+              {{ with .Values.infos.deployment.resources.requests -}}
+              cpu: {{ .cpu }}
+              memory: {{ .memory}}
+              {{- end }}
+          {{- end }}
           ports: {{ .Values.containerPorts | toYaml | nindent 12 }}
           readinessProbe:
             httpGet:

@@ -1,0 +1,7 @@
+cleDansCharteRacine: value
+
+global:
+  cleDansToutesLesSousChartes: value
+
+postgresql:
+  cleDansLaSousCharte: value

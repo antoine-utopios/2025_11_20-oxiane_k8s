@@ -1,0 +1,18 @@
+{{- range $idx, $svc := .Values.services | default list }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $.Release.Name }}-{{ $.Chart.Name }}-{{ $svc.name }}
+spec:
+  type: {{ .type }}
+  selector:
+    app: example-nginx
+    type: demo-02
+  ports:
+    - targetPort: {{ .targetPort }} 
+      port: {{ .port }}
+      {{ if eq .type "NodePort" -}}
+      nodePort: {{ .nodePort }}
+      {{- end }}
+{{- end }}

@@ -3,6 +3,46 @@ image:
   tag: alpine
 
 service:
-  enabled: false
+  enable: true
+  type: NodePort
+  targetPort: 443
+  port: 443
+  nodePort: 30443
+
+services:
+  - type: NodePort
+    name: toto
+    targetPort: 443
+    port: 443
+    nodePort: 30443
+  - type: LoadBalancer
+    name: tata
+    targetPort: 80
+    port: 80
 
 containerPorts: [80, 443]
+
+myNumberList:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+
+myNumberListBis: [1, 2, 3, 4, 5]
+
+myDictionnary:
+  keyA: valueA
+  keyB: valueB
+
+infos:
+  deployment:
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "200Mi"
+      requests:
+        cpu: "500m"
+        memory: "200Mi"
+
+testValidation: Blabla

@@ -1,0 +1,32 @@
+{{ if .Values.service.enabled -}}
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-example
+spec:
+  {{ if eq .Values.service.type "NodePort" -}}
+  type: NodePort
+  selector:
+    app: example-nginx
+    type: demo-02
+  ports:
+    - targetPort: {{ .Values.service.targetPort }} 
+      port: {{ .Values.service.port }}
+      nodePort: {{ .Values.service.nodePort }}
+  {{- else if eq .Values.service.type "ClusterIP" -}}
+  selector:
+    app: example-nginx
+    type: demo-02
+  ports:
+    - targetPort: {{ .Values.service.targetPort }} 
+      port: {{ .Values.service.port }}
+  {{- else -}}
+  type: LoadBalancer
+  selector:
+    app: example-nginx
+    type: demo-02
+  ports:
+    - targetPort: {{ .Values.service.targetPort }} 
+      port: {{ .Values.service.port }}
+  {{- end -}}
+{{- end }}

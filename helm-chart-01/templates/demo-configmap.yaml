@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: demo-configmap
+data:
+  myNumberList: {{ .Values.myNumberList | toYaml | nindent 4 }}
+  myNumberListBis: {{ .Values.myNumberListBis | toYaml | nindent 4 }}
+  myDictionnary: {{ .Values.myDictionnary | toYaml | nindent 4 }}
