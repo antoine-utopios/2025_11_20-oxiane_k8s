@@ -1,0 +1,19 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: cronjob-sleeper-example
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      completions: 5 # On veut avoir 5 complétions de notre job pour être sur que le code est bon
+      parallelism: 2 # On peut les tenter deux par deux pour gagner du temps
+      backoffLimit: 2 # Si a un moment donné l'un des job échoue, on lui permet de se relancer 2 fois de plus pour essayer d'atteindre la complétion
+
+      template:
+        spec:
+          containers:
+            - name: container-example
+              image: ubuntu
+              command: ["sleep", "10s"]
+          restartPolicy: OnFailure

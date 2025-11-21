@@ -1,0 +1,37 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: daemonset-example
+spec:
+  selector:
+    matchLabels:
+      app: ubuntu
+
+  template:
+    spec:
+      metadata:
+        labels:
+          app: ubuntu
+      tolerations:
+        - key: country
+          operator: Equal
+          value: fr
+          effect: NoSchedule
+        - key: country
+          operator: Equal
+          value: jp
+          effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: country
+                    operator: In
+                    values:
+                      - fr
+                      - jp
+      containers:
+        - name: container-example
+          image: ubuntu
+          command: ["sleep", "10s"]

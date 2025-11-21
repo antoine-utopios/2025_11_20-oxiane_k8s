@@ -1,0 +1,33 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: statefulset-mysql-example
+spec:
+  serviceName: service-example
+  replicas: 5
+  selector:
+    matchLabels:
+      app: example-mysql
+      type: demo-10
+  template:
+    metadata:
+      name: pod-mysql-example
+      labels:
+        app: example-mysql
+        type: demo-10
+    spec:
+      containers:
+        - name: container-mysql-example
+          image: mysql
+          resources:
+            limits:
+              cpu: "1"
+              memory: "500Mi"
+            requests:
+              cpu: "500m"
+              memory: "500Mi"
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
